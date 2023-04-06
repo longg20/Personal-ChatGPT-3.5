@@ -1,8 +1,11 @@
-A simple OpenAI ChatGPT 3.5 UI created with ReactJS TypeScript for personal use. Using personal API Key.
+a chatbot website powered by OpenAI ChatGPT-3.5, featuring a base chatbot for personal use and a variety of other chatbots with unique personalities based on fictional characters. Using personal API Key.
+Created with ReactJS TypeScript. Chat history is stored in LocalStorage.
 
 ## How to run:
-### `yarn install`
-To install required dependencies:
+### https://longg20.github.io/Personal-ChatGPT-3.5/
+### or Run the app in development mode
+`Yarn install` to install required dependencies:
+- openai
 - axios
 - openai
 - typescript
@@ -11,9 +14,7 @@ To install required dependencies:
 - lodash
 - antd
 - materialUI
-
-### `yarn start`
-Run the app in development mode. 
+Then `yarn start` to run the app in development mode. 
 Open http://localhost:3000 to view it in browser.
 
 ## Contact me:
