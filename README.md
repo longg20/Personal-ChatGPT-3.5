@@ -14,6 +14,7 @@ Created with ReactJS TypeScript. Chat history is stored in LocalStorage.
 - lodash
 - antd
 - materialUI
+
 Then `yarn start` to run the app in development mode. 
 Open http://localhost:3000 to view it in browser.
 
