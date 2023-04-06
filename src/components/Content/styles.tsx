@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { Content } from 'antd/es/layout/layout';
-import { Input, Button } from 'antd';
+import { Input, Button, Image } from 'antd';
 
 const { TextArea } = Input;
 
@@ -23,23 +23,41 @@ export const StyledChatboxWrapper = styled.div`
 
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+`;
+
+export const StyledChatboxHeader = styled.div`
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+    margin: -16px -16px 0 -16px;
+    padding: 16px;
+    box-shadow: 1px 2px 9px -5px #B8B8B8;
+    display: flex;
+    justify-content: flex-end;
+
+    svg {
+        width: 40px;
+        color: #C8C8C8;
+
+        &:hover {
+            color: #A8A8A8;
+            cursor: pointer;
+        }
+    }
 `;
 
 export const StyledTextInputWrapper = styled.div`
     height: 70px;
-
     display: flex;
     justify-content: space-between;
     gap: 8px;
+    margin-top: auto;
 `;
 
-export const StyledTextInput = styled(TextArea)<{ isLoading: boolean }>`
+export const StyledTextInput = styled(TextArea)<{ isloading: number }>`
     height: 100%;
     padding: 8px;
     box-shadow: 1px 2px 9px #C8C8C8;
 
-    background-color: ${props => props.isLoading ? '#E8E8E8' : '#ffffff'}
+    background-color: ${props => props.isloading ? '#E8E8E8' : '#ffffff'}
 `;
 
 export const StyledSendButton = styled(Button)`
@@ -60,11 +78,11 @@ export const StyledMessageWrapper = styled.div`
     justify-content: flex-start;
     gap: 16px;
 
-    div:nth-child(even) {
+    .user {
         align-self: flex-end;
       }
       
-    div:nth-child(odd) {
+    .assistant {
         align-self: flex-start;
     }
 
@@ -89,12 +107,54 @@ export const StyledMessageWrapper = styled.div`
 `;
 
 export const StyledLeftMessageBubble = styled.div`
-    max-width: 70%;
     padding: 16px;
     background-color: #E8E8E8;
-    border: 1px solid rgba(0,0,0,0.1);
+    border: 1px solid #D0D0D0;
     border-radius: 8px;
     white-space: pre-wrap;
+    margin-left: 70px;
+    margin-top: 22px;
+    position: relative;
+
+    &:after {
+        content: '';
+        position: absolute;
+        width: 0;
+        height: 0;
+        border-top: 15px solid #E8E8E8;
+        border-left: 15px solid transparent;
+        border-right: 15px solid transparent;
+        top: 0;
+        left: -15px;
+    }
+
+    &:before {
+        content: '';
+        position: absolute;
+        width: 0;
+        height: 0;
+        border-top: 17px solid #D0D0D0;
+        border-left: 16px solid transparent;
+        border-right: 16px solid transparent;
+        top: -1px;
+        left: -17px;
+    }
+`;
+
+export const StyledLeftMessageWrapper = styled.div`
+    position: relative;
+    max-width: 70%;
+`;
+
+export const StyledLeftAvatar = styled(Image)`
+    border-radius: 50%;
+    position: absolute;
+`;
+
+export const StyledLeftName = styled.div`
+    position: absolute;
+    left: 72px;
+    font-weight: bold;
 `;
 
 export const StyledRightMessageBubble = styled.div`

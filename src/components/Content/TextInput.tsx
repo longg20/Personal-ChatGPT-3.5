@@ -4,13 +4,15 @@ import { StyledSendButton, StyledTextInput, StyledTextInputWrapper } from "./sty
 import SendIcon from '@material-ui/icons/Send';
 import _ from 'lodash'; 
 import { CircularProgress } from "@material-ui/core";
-import { addNewMessage } from "../redux/chatbotSlice";
-import { api } from "../../requestMethod";
+import { addNewMessage } from "../../redux/chatbotSlice";
+import { api } from "../../api/requestMethod";
 import { useSelector } from 'react-redux';
-import { RootState } from '../redux/store';
+import { RootState } from "../../redux/store";
+import { toast } from 'react-toastify';
 
 const TextInput = () => {
     const [input, setInput] = useState<string>('');
+    const bot = useSelector((state: RootState) => state.chatbot.bot);
     const messages = useSelector((state: RootState) => state.chatbot.messages);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const dispatch = useDispatch();
@@ -27,12 +29,13 @@ const TextInput = () => {
 
             api.post('/v1/chat/completions', { 
                 'messages': [
-                    ...messages, 
+                    messages[0],
+                    ...messages.slice(-4), //remember the last 4 chat
                     userMessage,
                 ],
                 'model': "gpt-3.5-turbo",
                 'temperature': 0.8,
-                'max_tokens': 500,
+                'max_tokens': 1000,
             })
             .then(response => {
                 const assistantMessage = {
@@ -40,9 +43,19 @@ const TextInput = () => {
                     role: 'assistant',
                 };
                 dispatch(addNewMessage(assistantMessage));
+                localStorage.setItem(bot.key, JSON.stringify([...messages, userMessage, assistantMessage]));
             })
             .catch(error => {
-                console.error(error);
+                toast.error(error.response.data.error.message, {
+                    position: "top-center",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                });
             })
             .finally(() => {
                 setIsLoading(false);
@@ -55,7 +68,7 @@ const TextInput = () => {
             <StyledTextInput
                 style={{ resize: 'none' }}
                 value={isLoading ? '' : input}
-                isLoading={isLoading}
+                isloading={isLoading ? 1 : 0}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyPress={
                     event => {
