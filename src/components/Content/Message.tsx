@@ -20,10 +20,6 @@ const Message = () => {
         return value
           .split(/(\*)/)
           .reduce((accumulator: string, currentValue: string, index: number, matchList: string[]) => {
-            console.log('accumulator', accumulator)
-            console.log('currentValue', currentValue)
-            console.log('index', index)
-            console.log('matchList', matchList)
             if (currentValue !== '*') {
               if (
                 matchList[index - 1] === '*' &&
