@@ -1,4 +1,4 @@
-a chatbot website powered by OpenAI ChatGPT-3.5, featuring a base chatbot for personal use and a variety of other chatbots with unique personalities based on fictional characters. Using personal API Key.
+A chatbot website powered by OpenAI ChatGPT-3.5, featuring a base GPT-3.5 Turbo chatbot for personal use and a variety of other chatbots with unique personalities based on fictional characters. Using personal API Key.
 Created with ReactJS TypeScript. Chat history is stored in LocalStorage.
 
 ## How to run:
