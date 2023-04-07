@@ -28,14 +28,14 @@ const TextInput = () => {
             dispatch(addNewMessage(userMessage));
 
             api.post('/v1/chat/completions', { 
-                'messages': [
-                    messages[0],
-                    ...messages.slice(-4), //remember the last 4 chat
+                messages: [
+                    messages[0], //remember the first system prompt
+                    ...messages.slice(1).slice(-4), //remember the last 4 messages minus the first system prompt
                     userMessage,
                 ],
-                'model': "gpt-3.5-turbo",
-                'temperature': 0.8,
-                'max_tokens': 1000,
+                model: "gpt-3.5-turbo",
+                temperature: 0.8,
+                max_tokens: 1000,
             })
             .then(response => {
                 const assistantMessage = {
@@ -48,13 +48,6 @@ const TextInput = () => {
             .catch(error => {
                 toast.error(error.response.data.error.message, {
                     position: "top-center",
-                    autoClose: 5000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "light",
                 });
             })
             .finally(() => {

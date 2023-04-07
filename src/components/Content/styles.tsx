@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { Content } from 'antd/es/layout/layout';
 import { Input, Button, Image } from 'antd';
+import { Refresh } from '@mui/icons-material';
 
 const { TextArea } = Input;
 
@@ -165,4 +166,21 @@ export const StyledRightMessageBubble = styled.div`
     border-radius: 8px;
     margin-right: 12px;
     white-space: pre-wrap;
+`;
+
+export const StyledRefreshButton = styled(Refresh)`
+    position: absolute;
+    top: calc(50% + 8px);
+    right: -30px;
+    background-color: white;
+    opacity: 0.4;
+
+    &:hover {
+        opacity: 1;
+        cursor: pointer;
+    }
+
+    &:active {
+        transform: translateY(1px);
+    }
 `;

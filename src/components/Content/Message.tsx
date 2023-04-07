@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { StyledLeftAvatar, StyledLeftMessageBubble, StyledLeftMessageWrapper, StyledLeftName, StyledMessageWrapper, StyledRightMessageBubble } from "./styles";
+import { StyledLeftAvatar, StyledLeftMessageBubble, StyledLeftMessageWrapper, StyledLeftName, StyledMessageWrapper, StyledRefreshButton, StyledRightMessageBubble } from "./styles";
 import { useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
 
@@ -40,16 +40,20 @@ const Message = () => {
 
     return (
         <StyledMessageWrapper>
-            {messages.slice(bot.slice).map((message, index) => (
+            {messages.map((message, index) => (
                 message.role === 'user'
                 ?
                 <StyledRightMessageBubble className='user' key={index} dangerouslySetInnerHTML={{__html: getMarkupFromPseudoMarkdown(message.content)}} />
                 :
+                message.role === 'assistant'
+                ?
                 <StyledLeftMessageWrapper className='assistant' key={index}>
                     <StyledLeftAvatar width={50} src={bot.avatar} />
                     <StyledLeftName>{bot.name}</StyledLeftName>
                     <StyledLeftMessageBubble key={index} dangerouslySetInnerHTML={{__html: getMarkupFromPseudoMarkdown(message.content)}} />
+                    <StyledRefreshButton />
                 </StyledLeftMessageWrapper>
+                : null
             ))}
             <div ref={messagesEndRef} />
         </StyledMessageWrapper>
