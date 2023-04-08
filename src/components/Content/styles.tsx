@@ -180,9 +180,18 @@ export const StyledRightMessageBubble = styled.div`
 export const StyledRightMessageWarning = styled.span`
     color: red;
     margin-top: 6px;
+    text-decoration: underline;
+    cursor: pointer;
+    opacity: 0.7;
 
     svg {
+        vertical-align: middle;
         font-size: 16px;
+        margin-left: 3px;
+    }
+
+    &:hover {
+        opacity: 1;
     }
 `;
 

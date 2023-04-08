@@ -46,7 +46,7 @@ const Message = () => {
                 ?
                 <StyledRightMessageWrapper className='user' key={index}>
                   <StyledRightMessageBubble dangerouslySetInnerHTML={{__html: getMarkupFromPseudoMarkdown(message.content)}} />
-                  <StyledRightMessageWarning>Connection error! <u>Try again.<Refresh /></u></StyledRightMessageWarning>
+                  <StyledRightMessageWarning>Connection error! Try again<Refresh /></StyledRightMessageWarning>
                 </StyledRightMessageWrapper>
                 :
                 message.role === 'assistant'

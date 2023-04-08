@@ -14,7 +14,7 @@ const TextInput = () => {
     const dispatch = useDispatch<AppDispatch>();
 
     const callOpenAIAPI = async (input: string) => {
-        if (!_.isEmpty(input)) {
+        if (!_.isEmpty(input) && !isLoading) {
             setInput('');
             dispatch(sendMessage(input));
         };
