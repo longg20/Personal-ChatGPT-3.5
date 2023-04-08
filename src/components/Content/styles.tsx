@@ -192,6 +192,10 @@ export const StyledRightMessageWarning = styled.span`
     &:hover {
         opacity: 1;
     }
+
+    &:active {
+        transform: translateY(1px);
+    }
 `;
 
 export const StyledRefreshButton = styled(Refresh)`

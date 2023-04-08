@@ -97,9 +97,7 @@ export const chatbotSlice = createSlice({
         builder.addCase(sendMessage.rejected, (state, action) => {
             state.isLoading = false;
             state.messages[state.messages.length - 1].status = 'rejected';
-            toast.error(action?.payload?.response?.data?.error?.message, {
-                position: "top-center",
-            });
+            toast.error(action?.payload?.response?.data?.error?.message);
         });
     },
 });

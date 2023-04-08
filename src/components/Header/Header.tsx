@@ -9,7 +9,7 @@ const Header = () => {
     const dispatch = useDispatch();
 
     return (
-        <StyledHeader>
+        <StyledHeader className="header">
             Long's Miscellany
             <StyledMenu
                 theme="dark"
