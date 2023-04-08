@@ -10,6 +10,7 @@ import { AppDispatch, RootState } from "../../redux/store";
 
 const TextInput = () => {
     const [input, setInput] = useState<string>('');
+    const messages = useSelector((state: RootState) => state.chatbot.messages);
     const isLoading = useSelector((state: RootState) => state.chatbot.isLoading);
     const dispatch = useDispatch<AppDispatch>();
 
@@ -23,9 +24,9 @@ const TextInput = () => {
     return (
         <StyledTextInputWrapper>
             <StyledTextInput
+                disabled={isLoading || messages[messages.length - 1].status === 'rejected'}
                 style={{ resize: 'none' }}
                 value={isLoading ? '' : input}
-                isloading={isLoading ? 1 : 0}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyPress={
                     event => {
@@ -35,7 +36,10 @@ const TextInput = () => {
                     }
                 }
             />
-            <StyledSendButton onClick={() => callOpenAIAPI(input)}>
+            <StyledSendButton
+                disabled={messages[messages.length - 1].status === 'rejected'}
+                onClick={() => callOpenAIAPI(input)}
+            >
                 {
                     !isLoading
                     ?

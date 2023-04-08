@@ -1,13 +1,16 @@
 import { useEffect, useRef } from 'react';
 import { StyledLeftAvatar, StyledLeftMessageBubble, StyledLeftMessageWrapper, StyledLeftName, StyledMessageWrapper, StyledRefreshButton, StyledRightMessageBubble, StyledRightMessageWarning, StyledRightMessageWrapper } from "./styles";
 import { useSelector } from 'react-redux';
-import { RootState } from '../../redux/store';
+import { AppDispatch, RootState } from '../../redux/store';
 import { Refresh } from '@mui/icons-material';
+import { useDispatch } from 'react-redux';
+import { removeMessageById, sendMessage } from '../../redux/chatbotSlice';
 
 const Message = () => {
     const messagesEndRef = useRef<null | HTMLDivElement>(null);
     const bot = useSelector((state: RootState) => state.chatbot.bot);
     const messages = useSelector((state: RootState) => state.chatbot.messages);
+    const dispatch = useDispatch<AppDispatch>();
 
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -37,8 +40,15 @@ const Message = () => {
           .replace(/\n/g, '<br\/>')
           .replace(/\s+/g, ' ')
           .trim();
-    }
+    };
 
+    const resendMessage = () => {
+      if (messages[messages.length - 1].status === 'rejected') {
+        dispatch(removeMessageById(messages[messages.length - 1].id));
+        dispatch(sendMessage(messages[messages.length - 1].content));
+      }
+    };
+ 
     return (
         <StyledMessageWrapper>
             {messages.map((message, index) => (
@@ -46,7 +56,10 @@ const Message = () => {
                 ?
                 <StyledRightMessageWrapper className='user' key={index}>
                   <StyledRightMessageBubble dangerouslySetInnerHTML={{__html: getMarkupFromPseudoMarkdown(message.content)}} />
-                  <StyledRightMessageWarning>Connection error! Try again<Refresh /></StyledRightMessageWarning>
+                  <StyledRightMessageWarning onClick={() => resendMessage()}>
+                    Connection error! Try again
+                    <Refresh />
+                  </StyledRightMessageWarning>
                 </StyledRightMessageWrapper>
                 :
                 message.role === 'assistant'

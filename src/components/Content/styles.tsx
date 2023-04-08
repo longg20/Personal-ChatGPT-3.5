@@ -53,12 +53,11 @@ export const StyledTextInputWrapper = styled.div`
     margin-top: auto;
 `;
 
-export const StyledTextInput = styled(TextArea)<{ isloading: number }>`
+export const StyledTextInput = styled(TextArea)`
     height: 100%;
     padding: 8px;
     box-shadow: 1px 2px 9px #C8C8C8;
-
-    background-color: ${props => props.isloading ? '#E8E8E8' : '#ffffff'}
+    background-color: #fff;
 `;
 
 export const StyledSendButton = styled(Button)`
@@ -180,8 +179,8 @@ export const StyledRightMessageBubble = styled.div`
 export const StyledRightMessageWarning = styled.span`
     color: red;
     margin-top: 6px;
-    text-decoration: underline;
     cursor: pointer;
+    text-decoration: underline;
     opacity: 0.7;
 
     svg {

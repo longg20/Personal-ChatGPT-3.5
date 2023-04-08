@@ -7,7 +7,7 @@ export const api = axios.create({
         'Content-Type': 'application/json',
         'Authorization': 
             'Bearer '
-            + 'ss' 
+            + 's' 
             + 'k' 
             + '-' 
             + (process.env.REACT_APP_OPENAI_KEY_4 || '').split('').reverse().join('') 

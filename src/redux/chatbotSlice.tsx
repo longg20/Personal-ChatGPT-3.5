@@ -3,6 +3,7 @@ import { botData } from "../contexts/botData";
 import { api } from "../api/requestMethod";
 import { AppDispatch, RootState } from "./store";
 import { toast } from "react-toastify";
+import _ from "lodash";
 
 export const createAppAsyncThunk = createAsyncThunk.withTypes<{
     state: RootState
@@ -19,6 +20,7 @@ interface botDataType {
 };
 
 interface message {
+    id: string,
     content: string,
     role: 'user' | 'assistant' | 'system',
     status: 'pending' | 'fulfilled' | 'rejected',
@@ -34,15 +36,16 @@ const initialState = {
 export const sendMessage = createAppAsyncThunk('messages/sendMessage', async (input: string, { dispatch, getState, rejectWithValue }) => {
     const { messages } = getState().chatbot;
     const userMessage: message = {
+        id: _.uniqueId(),
         content: input,
         role: 'user',
-        status: 'pending'
+        status: 'pending',
     };
     dispatch(addNewMessage(userMessage));
     const data = await api.post('/v1/chat/completions', { 
         messages: [
             messages[0], //remember the first system prompt
-            ...messages.slice(1).slice(-4), //remember the last 4 messages minus the first system prompt
+            ...messages.slice(1).slice(-10), //remember the last 10 messages minus the first system prompt
             userMessage,
         ],
         model: "gpt-3.5-turbo",
@@ -65,6 +68,9 @@ export const chatbotSlice = createSlice({
         addNewMessage: (state, action) => {
             state.messages = [...state.messages, action.payload];
         },
+        removeMessageById: (state, action) => {
+            state.messages = state.messages.filter((message) => message.id !== action.payload);
+        },
         clearMessage: (state) => {
             state.messages = JSON.parse(state.bot.firstPrompt);
             localStorage.setItem(state.bot.key, state.bot.firstPrompt);
@@ -78,6 +84,7 @@ export const chatbotSlice = createSlice({
         builder.addCase(sendMessage.fulfilled, (state, action) => {
             state.isLoading = false;
             const assistantMessage: message = {
+                id: _.uniqueId(),
                 content: action?.payload?.data?.choices?.[0].message?.content,
                 role: 'assistant',
                 status: 'fulfilled',
@@ -97,5 +104,5 @@ export const chatbotSlice = createSlice({
     },
 });
 
-export const { switchBot, addNewMessage, clearMessage } = chatbotSlice.actions;
+export const { switchBot, addNewMessage, removeMessageById, clearMessage } = chatbotSlice.actions;
 export default chatbotSlice.reducer;
