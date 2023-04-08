@@ -74,6 +74,7 @@ export const StyledSendButton = styled(Button)`
 
 export const StyledMessageWrapper = styled.div`
     overflow-y: scroll;
+    overflow-x: hidden;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -158,14 +159,31 @@ export const StyledLeftName = styled.div`
     font-weight: bold;
 `;
 
-export const StyledRightMessageBubble = styled.div`
+export const StyledRightMessageWrapper = styled.div`
+    position: relative;
     max-width: 70%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    margin-right: 12px;
+`;
+
+export const StyledRightMessageBubble = styled.div`
+    display: inline-block;
     padding: 16px;
     background-color: #fff;
     border: 1px solid rgba(0,0,0,0.1);
     border-radius: 8px;
-    margin-right: 12px;
     white-space: pre-wrap;
+`;
+
+export const StyledRightMessageWarning = styled.span`
+    color: red;
+    margin-top: 6px;
+
+    svg {
+        font-size: 16px;
+    }
 `;
 
 export const StyledRefreshButton = styled(Refresh)`

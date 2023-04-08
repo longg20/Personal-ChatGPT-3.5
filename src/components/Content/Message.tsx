@@ -1,7 +1,8 @@
 import { useEffect, useRef } from 'react';
-import { StyledLeftAvatar, StyledLeftMessageBubble, StyledLeftMessageWrapper, StyledLeftName, StyledMessageWrapper, StyledRefreshButton, StyledRightMessageBubble } from "./styles";
+import { StyledLeftAvatar, StyledLeftMessageBubble, StyledLeftMessageWrapper, StyledLeftName, StyledMessageWrapper, StyledRefreshButton, StyledRightMessageBubble, StyledRightMessageWarning, StyledRightMessageWrapper } from "./styles";
 import { useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
+import { Refresh } from '@mui/icons-material';
 
 const Message = () => {
     const messagesEndRef = useRef<null | HTMLDivElement>(null);
@@ -43,14 +44,17 @@ const Message = () => {
             {messages.map((message, index) => (
                 message.role === 'user'
                 ?
-                <StyledRightMessageBubble className='user' key={index} dangerouslySetInnerHTML={{__html: getMarkupFromPseudoMarkdown(message.content)}} />
+                <StyledRightMessageWrapper className='user' key={index}>
+                  <StyledRightMessageBubble dangerouslySetInnerHTML={{__html: getMarkupFromPseudoMarkdown(message.content)}} />
+                  <StyledRightMessageWarning>Connection error! <u>Try again.<Refresh /></u></StyledRightMessageWarning>
+                </StyledRightMessageWrapper>
                 :
                 message.role === 'assistant'
                 ?
                 <StyledLeftMessageWrapper className='assistant' key={index}>
                     <StyledLeftAvatar width={50} src={bot.avatar} />
                     <StyledLeftName>{bot.name}</StyledLeftName>
-                    <StyledLeftMessageBubble key={index} dangerouslySetInnerHTML={{__html: getMarkupFromPseudoMarkdown(message.content)}} />
+                    <StyledLeftMessageBubble dangerouslySetInnerHTML={{__html: getMarkupFromPseudoMarkdown(message.content)}} />
                     <StyledRefreshButton />
                 </StyledLeftMessageWrapper>
                 : null
