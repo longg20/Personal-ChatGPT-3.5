@@ -14,14 +14,18 @@ export const StyledSidebar = styled(Sider)`
     }
 `;
 
-export const StyledAddButton = styled(Button)`
+export const StyledAddButton = styled(Button)<{ collapsed: number }>`
     width: calc(100% - 32px);
     margin: 16px;
     display: flex;
     align-items: center;
+    justify-content: center;
     height: 50px;
+    white-space: nowrap;
+    overflow: hidden;
+    padding: 0;
 
     svg {
-        margin-right: 5px;
+        margin: ${(props) => props.collapsed ? '0' : '0 5px 0 -10px'};
     }
 `;

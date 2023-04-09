@@ -9,7 +9,8 @@ import { removeMessageById, sendMessage } from '../../redux/chatbotSlice';
 const Message = () => {
     const messagesEndRef = useRef<null | HTMLDivElement>(null);
     const bot = useSelector((state: RootState) => state.chatbot.bot);
-    const messages = useSelector((state: RootState) => state.chatbot.messages);
+    const selectedConvKey = useSelector((state: RootState) => state.chatbot.selectedConvKey);
+    const conversations = useSelector((state: RootState) => state.chatbot.conversations);
     const dispatch = useDispatch<AppDispatch>();
 
     const scrollToBottom = () => {
@@ -18,7 +19,7 @@ const Message = () => {
 
     useEffect(() => {
         scrollToBottom();
-    }, [messages.length]);
+    }, [selectedConvKey, conversations]);
 
     function getMarkupFromPseudoMarkdown(value: string) {
         return value
@@ -42,24 +43,39 @@ const Message = () => {
           .trim();
     };
 
+    const getMessagesByConvKey = () => {
+      const mssgs = conversations.find((conv) => conv.key === selectedConvKey)?.messages;
+      return mssgs;
+    };
+
+    const getLastMessageByConvKey = () => {
+      const mssg = conversations.find((conv) => conv.key === selectedConvKey)?.messages;
+      if (mssg) return mssg[mssg.length - 1];
+    };
+
     const resendMessage = () => {
-      if (messages[messages.length - 1].status === 'rejected') {
-        dispatch(removeMessageById(messages[messages.length - 1].id));
-        dispatch(sendMessage(messages[messages.length - 1].content));
+      if (getLastMessageByConvKey()?.status === 'rejected') {
+        dispatch(removeMessageById(getLastMessageByConvKey()?.id));
+        dispatch(sendMessage(getLastMessageByConvKey()?.content!));
       }
     };
  
     return (
         <StyledMessageWrapper>
-            {messages.map((message, index) => (
+            {getMessagesByConvKey()?.map((message, index) => (
                 message.role === 'user'
                 ?
                 <StyledRightMessageWrapper className='user' key={index}>
                   <StyledRightMessageBubble dangerouslySetInnerHTML={{__html: getMarkupFromPseudoMarkdown(message.content)}} />
-                  <StyledRightMessageWarning onClick={() => resendMessage()}>
-                    Connection error! Try again
-                    <Refresh />
-                  </StyledRightMessageWarning>
+                  {
+                    getLastMessageByConvKey()?.status === 'rejected' 
+                    ?
+                    <StyledRightMessageWarning onClick={() => resendMessage()}>
+                      Connection error! Try again
+                      <Refresh />
+                    </StyledRightMessageWarning> 
+                    : null
+                  }
                 </StyledRightMessageWrapper>
                 :
                 message.role === 'assistant'

@@ -10,7 +10,8 @@ import { AppDispatch, RootState } from "../../redux/store";
 
 const TextInput = () => {
     const [input, setInput] = useState<string>('');
-    const messages = useSelector((state: RootState) => state.chatbot.messages);
+    const selectedConvKey = useSelector((state: RootState) => state.chatbot.selectedConvKey);
+    const conversations = useSelector((state: RootState) => state.chatbot.conversations);
     const isLoading = useSelector((state: RootState) => state.chatbot.isLoading);
     const dispatch = useDispatch<AppDispatch>();
 
@@ -21,10 +22,15 @@ const TextInput = () => {
         };
     };
 
+    const getLastMessageByConvKey = () => {
+        const mssg = conversations.find((conv) => conv.key === selectedConvKey)?.messages;
+        if (mssg) return mssg[mssg.length - 1];
+    };
+
     return (
         <StyledTextInputWrapper>
             <StyledTextInput
-                disabled={isLoading || messages[messages.length - 1].status === 'rejected'}
+                disabled={isLoading || getLastMessageByConvKey()?.status === 'rejected'}
                 style={{ resize: 'none' }}
                 value={isLoading ? '' : input}
                 onChange={(e) => setInput(e.target.value)}
@@ -37,7 +43,7 @@ const TextInput = () => {
                 }
             />
             <StyledSendButton
-                disabled={messages[messages.length - 1].status === 'rejected'}
+                disabled={getLastMessageByConvKey()?.status === 'rejected'}
                 onClick={() => callOpenAIAPI(input)}
             >
                 {
