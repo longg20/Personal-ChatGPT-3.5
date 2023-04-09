@@ -1,18 +1,18 @@
 {
   "files": {
     "main.css": "/Personal-ChatGPT-3.5/static/css/main.bc1dca3e.css",
-    "main.js": "/Personal-ChatGPT-3.5/static/js/main.2dde37df.js",
+    "main.js": "/Personal-ChatGPT-3.5/static/js/main.38db47ea.js",
     "static/js/787.28cb0dcd.chunk.js": "/Personal-ChatGPT-3.5/static/js/787.28cb0dcd.chunk.js",
     "static/media/tsunbot.png": "/Personal-ChatGPT-3.5/static/media/tsunbot.9a4a57ef16d312054884.png",
     "static/media/nahidabot.png": "/Personal-ChatGPT-3.5/static/media/nahidabot.6ed184f4a97602090b91.png",
     "static/media/chatgpt.png": "/Personal-ChatGPT-3.5/static/media/chatgpt.0d1c112f94ecc42eef79.png",
     "index.html": "/Personal-ChatGPT-3.5/index.html",
     "main.bc1dca3e.css.map": "/Personal-ChatGPT-3.5/static/css/main.bc1dca3e.css.map",
-    "main.2dde37df.js.map": "/Personal-ChatGPT-3.5/static/js/main.2dde37df.js.map",
+    "main.38db47ea.js.map": "/Personal-ChatGPT-3.5/static/js/main.38db47ea.js.map",
     "787.28cb0dcd.chunk.js.map": "/Personal-ChatGPT-3.5/static/js/787.28cb0dcd.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.bc1dca3e.css",
-    "static/js/main.2dde37df.js"
+    "static/js/main.38db47ea.js"
   ]
 }
