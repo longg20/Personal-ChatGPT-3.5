@@ -20,16 +20,15 @@ const Sidebar = () => {
         </StyledAddButton>
         <Menu
             mode="inline"
-            defaultSelectedKeys={['1']}
-            defaultOpenKeys={['sub1']}
+            defaultSelectedKeys={['chatgpt1']}
             style={{ height: '100%', borderRight: 0 }}
             items={[
               {
-                key: 'ChatGPT-3.5 Chat 1',
+                key: 'chatgpt1',
                 label: `ChatGPT-3.5 Chat 1`,
               },
               {
-                key: 'ChatGPT-3.5 Chat 2',
+                key: 'chatgpt2',
                 label: `ChatGPT-3.5 Chat 2`,
               },
             ]}

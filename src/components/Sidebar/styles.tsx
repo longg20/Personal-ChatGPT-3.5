@@ -4,6 +4,12 @@ import styled from 'styled-components';
 const { Sider } = Layout;
 
 export const StyledSidebar = styled(Sider)`
+    overflow: hidden;
+    height: calc(100vh - 65px);
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
     .ant-menu-item-only-child {
     }
 `;
