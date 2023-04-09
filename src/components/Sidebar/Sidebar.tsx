@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
-import { LaptopOutlined, NotificationOutlined, UserOutlined } from '@ant-design/icons';
-import { Menu, MenuProps } from "antd";
+import { useState } from 'react';
+import { Menu } from "antd";
 import { StyledAddButton, StyledSidebar } from "./styles";
 import { Add } from '@mui/icons-material';
 

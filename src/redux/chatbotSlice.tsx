@@ -36,7 +36,7 @@ const initialState = {
 export const sendMessage = createAppAsyncThunk('messages/sendMessage', async (input: string, { dispatch, getState, rejectWithValue }) => {
     const { messages } = getState().chatbot;
     const userMessage: message = {
-        id: _.uniqueId(),
+        id: _.uniqueId('msg-'),
         content: input,
         role: 'user',
         status: 'pending',
@@ -84,7 +84,7 @@ export const chatbotSlice = createSlice({
         builder.addCase(sendMessage.fulfilled, (state, action) => {
             state.isLoading = false;
             const assistantMessage: message = {
-                id: _.uniqueId(),
+                id: _.uniqueId('msg-'),
                 content: action?.payload?.data?.choices?.[0].message?.content,
                 role: 'assistant',
                 status: 'fulfilled',
