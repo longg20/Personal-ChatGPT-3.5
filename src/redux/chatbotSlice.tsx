@@ -78,15 +78,16 @@ export const chatbotSlice = createSlice({
     initialState,
     reducers: {
         switchBot: (state, action) => {
-            const localStoredConversations = localStorage.getItem(initialBot.key);
+            const localStoredConversations = localStorage.getItem(action.payload.key);
             const initialConversations: conversationDataType[] = localStoredConversations ? JSON.parse(localStoredConversations) : [
                 { 
-                    key: uuidv4(initialBot.key),
-                    label: initialBot.name + ' Chat 1',
-                    messages: JSON.parse(initialBot.firstPrompt),
+                    key: uuidv4(action.payload.key),
+                    label: action.payload.name + ' Chat 1',
+                    messages: JSON.parse(action.payload.firstPrompt),
                 }
             ];
             state.bot = action.payload;
+            state.selectedConvKey = initialConversations[0].key;
             state.conversations = initialConversations;
         },
         switchConversation: (state, action) => {
@@ -95,7 +96,7 @@ export const chatbotSlice = createSlice({
         addNewConversation: (state) => {
             let newConversation = { 
                 key: uuidv4(state.bot.key),
-                label: initialBot.name + ' Chat ' + (state.conversations.length + 1),
+                label: state.bot.name + ' Chat ' + (state.conversations.length + 1),
                 messages: JSON.parse(state.bot.firstPrompt),
             };
             state.conversations = [...state.conversations, newConversation];
@@ -117,7 +118,7 @@ export const chatbotSlice = createSlice({
         clearMessage: (state) => {
             let newConversations = [...state.conversations];
             let index = newConversations.findIndex((conv) => conv.key === state.selectedConvKey);
-            newConversations[index].messages = JSON.parse(initialBot.firstPrompt);
+            newConversations[index].messages = JSON.parse(state.bot.firstPrompt);
             state.conversations = newConversations;
             localStorage.setItem(state.bot.key, JSON.stringify(state.conversations));
         },

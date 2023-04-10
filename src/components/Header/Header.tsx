@@ -18,7 +18,7 @@ const Header = () => {
                 defaultSelectedKeys={['chatgpt']}
                 onClick={(e) => {
                     dispatch(switchBot(botData.find((bots) => bots.key === e.key)));
-                    navigate(`/${e.key}`)
+                    navigate(`/${e.key}`);
                 }}
                 items={[
                     {
