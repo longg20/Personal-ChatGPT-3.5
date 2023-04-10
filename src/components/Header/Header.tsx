@@ -1,13 +1,11 @@
 import { Menu } from "antd";
 import { StyledHeader, StyledMenu } from "./styles";
-import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { switchBot } from "../../redux/chatbotSlice";
 import { botData } from "../../contexts/botData";
 
 const Header = () => {
     const dispatch = useDispatch();
-    const navigate = useNavigate();
 
     return (
         <StyledHeader className="header">
@@ -16,10 +14,7 @@ const Header = () => {
                 theme="dark"
                 mode="horizontal"
                 defaultSelectedKeys={['chatgpt']}
-                onClick={(e) => {
-                    dispatch(switchBot(botData.find((bots) => bots.key === e.key)));
-                    navigate(`/${e.key}`);
-                }}
+                onClick={(e) => dispatch(switchBot(botData.find((bots) => bots.key === e.key)))}
                 items={[
                     {
                         key: 'chatgpt',

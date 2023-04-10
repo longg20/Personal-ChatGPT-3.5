@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { Content } from 'antd/es/layout/layout';
 import { Input, Button, Image } from 'antd';
-import { Refresh } from '@mui/icons-material';
+import { NavigateBefore, NavigateNext } from '@mui/icons-material';
 
 const { TextArea } = Input;
 
@@ -198,19 +198,33 @@ export const StyledRightMessageWarning = styled.span`
     }
 `;
 
-export const StyledRefreshButton = styled(Refresh)`
+export const StyledNavigateButtonsWrapper = styled.div`
     position: absolute;
+    width: 1px;
     top: calc(50% + 8px);
-    right: -30px;
-    background-color: white;
-    opacity: 0.4;
+    right: -10px;
+    display: flex;
+    align-items: center;
 
-    &:hover {
-        opacity: 1;
+    svg {
+        // margin-left: -8px;
         cursor: pointer;
-    }
+        opacity: 0.4;
 
-    &:active {
-        transform: translateY(1px);
+        &:hover {
+            opacity: 1;
+            border: 1px solid rgba(0,0,0,0.05);
+            border-radius: 50%;
+        }
+    
+        &:active {
+            transform: translateY(1px);
+        }
     }
+`;
+
+export const StyledNavigateNextButton = styled(NavigateNext)`
+`;
+
+export const StyledNavigateBeforeButton = styled(NavigateBefore)`
 `;

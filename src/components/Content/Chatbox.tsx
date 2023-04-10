@@ -26,8 +26,6 @@ const Chatbox = () => {
                 open={isShowWarningModal}
                 onOk={() => dispatch(clearMessage())}
                 hideModal={() => setIsShowWarningModal(false)}
-                okText="OK"
-                cancelText="Cancel"
                 description="Confirm clear all messages?"
 
             />

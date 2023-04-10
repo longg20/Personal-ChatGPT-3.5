@@ -24,11 +24,13 @@ interface conversationDataType {
     messages: messageDataType[],
 }
 
-interface messageDataType {
+export interface messageDataType {
     id: string,
     content: string,
     role: 'user' | 'assistant' | 'system',
     status: 'pending' | 'fulfilled' | 'rejected',
+    swipe?: string[],
+    swipeIndex?: number,
 };
 
 const initialBot: botDataType = botData[0];
@@ -73,6 +75,28 @@ export const sendMessage = createAppAsyncThunk('messages/sendMessage', async (in
     return data;
 });
 
+export const swipeNewMessage = createAppAsyncThunk('messages/swipeMessage', async (_input, { dispatch, getState, rejectWithValue }) => {
+    const { selectedConvKey, conversations } = getState().chatbot;
+    const conversation = conversations.find((conv) => conv.key === selectedConvKey) || initialConversations[0];
+
+    const data = await api.post('/v1/chat/completions', { 
+        messages: [
+            conversation.messages[0], //remember the first system prompt
+            ...conversation.messages
+                .slice(1) //remove first system prompt
+                .slice(0, -1) //remove last message since we swipe
+                .slice(-6) //remember last 6 message
+                .map((mssg) => ({ content: mssg.content, role: mssg.role })),
+        ],
+        model: "gpt-3.5-turbo",
+        temperature: 0.8,
+        max_tokens: 1024,
+    }).catch((error) => {
+        return rejectWithValue(error);
+    });
+    return data;
+});
+
 export const chatbotSlice = createSlice({
     name: 'states',
     initialState,
@@ -102,11 +126,42 @@ export const chatbotSlice = createSlice({
             state.conversations = [...state.conversations, newConversation];
             localStorage.setItem(state.bot.key, JSON.stringify(state.conversations));
         },
+        changeConversationName: (state, action) => {
+            let convIndex = state.conversations.findIndex((conv) => conv.key === state.selectedConvKey);
+            state.conversations[convIndex].label = action.payload;
+            localStorage.setItem(state.bot.key, JSON.stringify(state.conversations));
+        },
+        duplicateConversation: (state) => {
+            let convIndex = state.conversations.findIndex((conv) => conv.key === state.selectedConvKey);
+            let newConversation = {...state.conversations[convIndex]};
+            newConversation.key = uuidv4(state.bot.key);
+            newConversation.label = newConversation.label + ' - Copy';
+            state.conversations = [...state.conversations.slice(0, convIndex + 1), newConversation, ...state.conversations.slice(convIndex + 1)];
+            localStorage.setItem(state.bot.key, JSON.stringify(state.conversations));
+        },
+        deleteConversation: (state) => {
+            let convIndex = state.conversations.findIndex((conv) => conv.key === state.selectedConvKey);
+            let newConversations = [
+                ...state.conversations.slice(0, convIndex),
+                ...state.conversations.slice(convIndex + 1),
+            ];
+            state.conversations = newConversations;
+            state.selectedConvKey = newConversations[0].key;
+            localStorage.setItem(state.bot.key, JSON.stringify(state.conversations));
+        },
         addNewMessage: (state, action) => {
             let newConversations = [...state.conversations];
             let index = newConversations.findIndex((conv) => conv.key === state.selectedConvKey);
             newConversations[index].messages = [...newConversations[index].messages, action.payload];
             state.conversations = newConversations;
+        },
+        swipeMessage: (state, action) => {
+            let newConversations = [...state.conversations];
+            let convIndex = newConversations.findIndex((conv) => conv.key === state.selectedConvKey);
+            let mssgIndex = newConversations[convIndex].messages.length - 1;
+            newConversations[convIndex].messages[mssgIndex].swipeIndex = newConversations[convIndex].messages[mssgIndex].swipeIndex + action.payload;
+            state.conversations = newConversations;
+            localStorage.setItem(state.bot.key, JSON.stringify(state.conversations));
         },
         removeMessageById: (state, action) => {
             let newConversations = [...state.conversations];
@@ -151,8 +206,50 @@ export const chatbotSlice = createSlice({
             state.conversations = newConversations;
             toast.error(action?.payload?.response?.data?.error?.message);
         });
+
+        builder.addCase(swipeNewMessage.pending, (state) => {
+            state.isLoading = true;
+            let content = '...';
+            let newConversations = [...state.conversations];
+            let convIndex = newConversations.findIndex((conv) => conv.key === state.selectedConvKey);
+            let mssgIndex = newConversations[convIndex].messages.length - 1;
+            newConversations[convIndex].messages[mssgIndex].swipe = [...newConversations[convIndex].messages[mssgIndex].swipe || [], content];
+            newConversations[convIndex].messages[mssgIndex].swipeIndex = (newConversations[convIndex].messages[mssgIndex].swipeIndex || -1) + 1;
+            state.conversations = newConversations;
+          });
+      
+        builder.addCase(swipeNewMessage.fulfilled, (state, action) => {
+            state.isLoading = false;
+            let content = action?.payload?.data?.choices?.[0].message?.content;
+            let newConversations = [...state.conversations];
+            let convIndex = newConversations.findIndex((conv) => conv.key === state.selectedConvKey);
+            let mssgIndex = newConversations[convIndex].messages.length - 1;
+            newConversations[convIndex].messages[mssgIndex].swipe = [...newConversations[convIndex].messages[mssgIndex].swipe?.slice(0, -1) || [], content];
+            state.conversations = newConversations;
+            localStorage.setItem(state.bot.key, JSON.stringify(state.conversations));
+        });
+    
+        builder.addCase(swipeNewMessage.rejected, (state, action) => {
+            state.isLoading = false;
+            let newConversations = [...state.conversations];
+            let index = newConversations.findIndex((conv) => conv.key === state.selectedConvKey);
+            newConversations[index].messages[newConversations[index].messages.length - 1].status = 'rejected';
+            state.conversations = newConversations;
+            toast.error(action?.payload?.response?.data?.error?.message);
+        });
     },
 });
 
-export const { switchBot, switchConversation, addNewConversation, addNewMessage, removeMessageById, clearMessage } = chatbotSlice.actions;
+export const {
+    switchBot,
+    switchConversation,
+    addNewConversation,
+    changeConversationName,
+    duplicateConversation,
+    deleteConversation,
+    addNewMessage,
+    swipeMessage,
+    removeMessageById,
+    clearMessage,
+} = chatbotSlice.actions;
 export default chatbotSlice.reducer;

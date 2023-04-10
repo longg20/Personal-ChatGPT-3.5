@@ -1,10 +1,11 @@
 import { useEffect, useRef } from 'react';
-import { StyledLeftAvatar, StyledLeftMessageBubble, StyledLeftMessageWrapper, StyledLeftName, StyledMessageWrapper, StyledRefreshButton, StyledRightMessageBubble, StyledRightMessageWarning, StyledRightMessageWrapper } from "./styles";
+import { StyledLeftAvatar, StyledLeftMessageBubble, StyledLeftMessageWrapper, StyledLeftName, StyledMessageWrapper, StyledNavigateBeforeButton, StyledNavigateButtonsWrapper, StyledNavigateNextButton, StyledRightMessageBubble, StyledRightMessageWarning, StyledRightMessageWrapper } from "./styles";
 import { useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../redux/store';
 import { Refresh } from '@mui/icons-material';
 import { useDispatch } from 'react-redux';
-import { removeMessageById, sendMessage } from '../../redux/chatbotSlice';
+import { messageDataType, removeMessageById, sendMessage, swipeMessage, swipeNewMessage } from '../../redux/chatbotSlice';
+import _ from 'lodash';
 
 const Message = () => {
     const messagesEndRef = useRef<null | HTMLDivElement>(null);
@@ -59,22 +60,35 @@ const Message = () => {
         dispatch(sendMessage(getLastMessageByConvKey()?.content!));
       }
     };
+
+    const handleSwipeBefore = () => {
+      if (getLastMessageByConvKey()?.swipeIndex !== -1) {
+        dispatch(swipeMessage(-1));
+      }
+    };
+
+    const handleSwipeNext = () => {
+      if (_.isEmpty(getLastMessageByConvKey()?.swipe) || getLastMessageByConvKey()?.swipeIndex === getLastMessageByConvKey()?.swipe?.length! - 1) {
+        dispatch(swipeNewMessage());
+      } else {
+        dispatch(swipeMessage(1));
+      }
+    };
  
     return (
         <StyledMessageWrapper>
-            {getMessagesByConvKey()?.map((message, index) => (
+            {getMessagesByConvKey()?.filter((mssg) => mssg.role !== 'system').map((message, index, messages) => (
                 message.role === 'user'
                 ?
                 <StyledRightMessageWrapper className='user' key={index}>
                   <StyledRightMessageBubble dangerouslySetInnerHTML={{__html: getMarkupFromPseudoMarkdown(message.content)}} />
                   {
                     getLastMessageByConvKey()?.status === 'rejected' 
-                    ?
+                    &&
                     <StyledRightMessageWarning onClick={() => resendMessage()}>
                       Connection error! Try again
                       <Refresh />
                     </StyledRightMessageWarning> 
-                    : null
                   }
                 </StyledRightMessageWrapper>
                 :
@@ -83,8 +97,18 @@ const Message = () => {
                 <StyledLeftMessageWrapper className='assistant' key={index}>
                     <StyledLeftAvatar width={50} src={bot.avatar} />
                     <StyledLeftName>{bot.name}</StyledLeftName>
-                    <StyledLeftMessageBubble dangerouslySetInnerHTML={{__html: getMarkupFromPseudoMarkdown(message.content)}} />
-                    <StyledRefreshButton />
+                    <StyledLeftMessageBubble dangerouslySetInnerHTML={{__html: getMarkupFromPseudoMarkdown(
+                      (!message.swipe || message.swipeIndex === -1) ? message.content : message.swipe?.[message.swipeIndex || 0] || ''
+                    )}} />
+                    {
+                      (index !== 0 && index === messages.length - 1)
+                      &&
+                      <StyledNavigateButtonsWrapper>
+                        { (message.swipe && message.swipeIndex !== -1) && <StyledNavigateBeforeButton onClick={() => handleSwipeBefore()} /> }
+                        { (message.swipe && _.isNumber(message.swipeIndex)) && `${message?.swipeIndex + 2}/${message?.swipe?.length + 1}`}
+                        <StyledNavigateNextButton onClick={() => handleSwipeNext()} />
+                      </StyledNavigateButtonsWrapper>
+                    }
                 </StyledLeftMessageWrapper>
                 : null
             ))}

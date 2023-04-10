@@ -5,12 +5,12 @@ interface WarningModalProps {
 	open: boolean,
 	onOk: () => void,
 	hideModal: () => void,
-	okText: string,
-	cancelText: string,
+	okText?: string,
+	cancelText?: string,
 	description: string,
 }
 
-export const WarningModal = ({ title, open, onOk, hideModal, okText, cancelText, description }: WarningModalProps) => {
+export const WarningModal = ({ title, open, onOk, hideModal, okText = 'OK', cancelText = 'Cancel', description }: WarningModalProps) => {
   return (
     <Modal
 		title={title}
