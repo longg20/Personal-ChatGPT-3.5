@@ -52,16 +52,22 @@ const Sidebar = () => {
             mode="inline"
             defaultSelectedKeys={[conversations[0].key]}
             selectedKeys={[selectedConvKey]}
-            style={{ height: '100%', borderRight: 0 }}
+            style={{ borderRight: 0 }}
             disabled={isLoading}
             items={conversations.map((conv) => ({
               key: conv.key,
               label: (
                 <StyledMenuItem>
-                  {conv.label}
-                  <Dropdown menu={{ items }} placement="bottomLeft" arrow trigger={['click']}>
-                    <Edit className='edit-icon' />
-                  </Dropdown>
+                  {
+                    !collapsed && (
+                      <>
+                        {conv.label}
+                        <Dropdown menu={{ items }} placement="bottomLeft" arrow trigger={['click']}>
+                          <Edit className='edit-icon' />
+                        </Dropdown>
+                      </>
+                    )
+                  }
                 </StyledMenuItem>
               ),
               icon: <ChatBubbleOutline />,
