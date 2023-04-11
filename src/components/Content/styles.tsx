@@ -140,22 +140,66 @@ export const StyledLeftMessageBubble = styled.div`
         top: -1px;
         left: -17px;
     }
+
+    @media (max-width: 480px) {
+        padding: 12px;
+        margin-left: 48px;
+        margin-top: 16px;
+
+        &:after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 0;
+            border-top: 5px solid #E8E8E8;
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            top: 0;
+            left: -5px;
+        }
+
+        &:before {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 0;
+            border-top: 7px solid #D0D0D0;
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            top: -1px;
+            left: -7px;
+        }
+    }
 `;
 
 export const StyledLeftMessageWrapper = styled.div`
     position: relative;
     max-width: 70%;
+
+    @media (max-width: 480px) {
+        max-width: 90%;
+    }
 `;
 
 export const StyledLeftAvatar = styled(Image)`
     border-radius: 50%;
     position: absolute;
+    width: 50px !important;
+
+    @media (max-width: 480px) {
+        width: 35px !important;
+    }
 `;
 
 export const StyledLeftName = styled.div`
     position: absolute;
     left: 72px;
     font-weight: bold;
+
+    @media (max-width: 480px) {
+        left: 48px;
+        top: 14px;
+    }
 `;
 
 export const StyledRightMessageWrapper = styled.div`
@@ -165,6 +209,10 @@ export const StyledRightMessageWrapper = styled.div`
     flex-direction: column;
     align-items: flex-end;
     margin-right: 12px;
+
+    @media (max-width: 480px) {
+        max-width: 90%;
+    }
 `;
 
 export const StyledRightMessageBubble = styled.div`
@@ -174,6 +222,10 @@ export const StyledRightMessageBubble = styled.div`
     border: 1px solid rgba(0,0,0,0.1);
     border-radius: 8px;
     white-space: pre-wrap;
+
+    @media (max-width: 480px) {
+        padding: 12px;
+    }
 `;
 
 export const StyledRightMessageWarning = styled.span`
@@ -207,7 +259,6 @@ export const StyledNavigateButtonsWrapper = styled.div`
     align-items: center;
 
     svg {
-        // margin-left: -8px;
         cursor: pointer;
         opacity: 0.4;
 

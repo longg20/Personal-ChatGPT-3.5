@@ -95,7 +95,7 @@ const Message = () => {
                 message.role === 'assistant'
                 ?
                 <StyledLeftMessageWrapper className='assistant' key={index}>
-                    <StyledLeftAvatar width={50} src={bot.avatar} />
+                    <StyledLeftAvatar src={bot.avatar} />
                     <StyledLeftName>{bot.name}</StyledLeftName>
                     <StyledLeftMessageBubble dangerouslySetInnerHTML={{__html: getMarkupFromPseudoMarkdown(
                       (!message.swipe || message.swipeIndex === -1) ? message.content : message.swipe?.[message.swipeIndex || 0] || ''
