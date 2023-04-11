@@ -4,6 +4,7 @@ import { api } from "../api/requestMethod";
 import { AppDispatch, RootState } from "./store";
 import { toast } from "react-toastify";
 import { uuidv4 } from "../api/uuidv4";
+import _ from "lodash";
 
 export const createAppAsyncThunk = createAsyncThunk.withTypes<{
     state: RootState
@@ -151,8 +152,15 @@ export const chatbotSlice = createSlice({
         },
         addNewMessage: (state, action) => {
             let newConversations = [...state.conversations];
-            let index = newConversations.findIndex((conv) => conv.key === state.selectedConvKey);
-            newConversations[index].messages = [...newConversations[index].messages, action.payload];
+            let convIndex = newConversations.findIndex((conv) => conv.key === state.selectedConvKey);
+            let lastMessage = newConversations[convIndex].messages[newConversations[convIndex].messages.length - 1];
+            if (lastMessage.swipe) {
+                if (_.isNumber(lastMessage.swipeIndex) && lastMessage.swipeIndex >= 0) {
+                    lastMessage.content = lastMessage.swipe[lastMessage.swipeIndex];
+                }
+                lastMessage = _.omit(lastMessage, ['swipe', 'swipeIndex']);
+            }
+            newConversations[convIndex].messages = [...newConversations[convIndex].messages.slice(0, -1), lastMessage, action.payload];
             state.conversations = newConversations;
         },
         swipeMessage: (state, action) => {
