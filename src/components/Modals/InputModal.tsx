@@ -1,6 +1,6 @@
 import { Input, Modal } from 'antd';
 import _ from 'lodash';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 interface WarningModalProps {
 	title: string,
@@ -13,7 +13,7 @@ interface WarningModalProps {
 }
 
 export const InputModal = ({ title, open, onOk, hideModal, okText = 'OK', cancelText = 'Cancel', initialInput }: WarningModalProps) => {
-	const [input, setInput] = useState<string>(initialInput || '');
+	const [input, setInput] = useState<string>('');
 
 	const handleOK = () => {
 		if (!_.isEmpty(input)) {
@@ -21,6 +21,12 @@ export const InputModal = ({ title, open, onOk, hideModal, okText = 'OK', cancel
 			hideModal();
 		}
 	};
+
+	useEffect(() => {
+		if (initialInput) {
+			setInput(initialInput);
+		}
+	}, [initialInput]);
 
 	return (
 		<Modal
