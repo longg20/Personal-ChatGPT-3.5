@@ -49,6 +49,7 @@ const initialState = {
     selectedConvKey: initialConversations[0].key,
     conversations: initialConversations,
     isLoading: false,
+    isUnlocked: false,
 };
 
 export const sendMessage = createAppAsyncThunk('messages/sendMessage', async (input: string, { dispatch, getState, rejectWithValue }) => {
@@ -185,6 +186,13 @@ export const chatbotSlice = createSlice({
             state.conversations = newConversations;
             localStorage.setItem(state.bot.key, JSON.stringify(state.conversations));
         },
+        unlockBot: (state, action) => {
+            if (action.payload === process.env.REACT_APP_UNLOCK_PASSWORD) {
+                state.isUnlocked = true;
+            } else {
+                toast.error('Invalid password');
+            }
+        },
     },
     extraReducers: (builder) => {
         builder.addCase(sendMessage.pending, (state) => {
@@ -259,5 +267,6 @@ export const {
     swipeMessage,
     removeMessageById,
     clearMessage,
+    unlockBot,
 } = chatbotSlice.actions;
 export default chatbotSlice.reducer;
