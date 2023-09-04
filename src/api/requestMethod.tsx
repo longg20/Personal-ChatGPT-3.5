@@ -9,7 +9,7 @@ export const api = axios.create({
             'Bearer '
             + 's' 
             + 'k' 
-            + '-' 
+            + '-'
             + (process.env.REACT_APP_OPENAI_KEY_4 || '').split('').reverse().join('') 
             + (process.env.REACT_APP_OPENAI_KEY_3 || '').split('').reverse().join('') 
             + (process.env.REACT_APP_OPENAI_KEY_2 || '').split('').reverse().join('') 
